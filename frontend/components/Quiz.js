@@ -1,6 +1,18 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import * as actionCreators from '../state/action-creators'
+import {connect} from "react-redux"
 
-export default function Quiz(props) {
+
+
+ function Quiz(props) {
+console.log(props)
+useEffect(()=>{
+props.fetchQuiz()
+},[])
+
+
+
+ 
   return (
     <div id="wrapper">
       {
@@ -32,3 +44,5 @@ export default function Quiz(props) {
     </div>
   )
 }
+
+export default connect(st => st, actionCreators)(Quiz)
