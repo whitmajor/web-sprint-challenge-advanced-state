@@ -46,9 +46,23 @@ export function inputChange(id , value) {
 
  }
 
-export function resetForm() { }
+export function resetForm() { 
+  return{
+    type: types.RESET_FORM
+  }
+ 
+}
 
 // ❗ Async action creators
+    
+    export function onChange(id , value ) {
+     return function(dispatch){
+dispatch(inputChange(id,value))
+     }
+
+}
+
+
 export function fetchQuiz() {
   return function (dispatch) {
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
@@ -88,7 +102,7 @@ export function postQuiz(newQuiz) {
     .then(res=> {
       console.log(res.data)
       dispatch({type: types.SET_QUIZ_INTO_STATE, payload: res.data})
-      dispatch(setMessage(`Congrats: "${res.data.question}?" is a great question!`))
+      dispatch(setMessage(`Congrats: "${res.data.question}" is a great question!`))
       dispatch(resetForm())
     })
   }

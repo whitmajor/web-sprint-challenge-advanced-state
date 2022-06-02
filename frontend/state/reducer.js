@@ -28,6 +28,7 @@ default:
 
 const initialQuizState = null
 function quiz(quizState = initialQuizState, action) {
+  console.log(action.payload)
   switch(action.type){
     case types.SET_QUIZ_INTO_STATE:{
       return action.payload
@@ -45,7 +46,7 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
       return action.payload
     }
       default:
-        return state
+        return state;
   }
 }
 

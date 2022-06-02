@@ -1,26 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import { connect } from "react-redux";
 import * as actionCreators from "../state/action-creators";
 
 const Quiz = (props) => {
+  //console.log(props)
+
 
   const quiz = props.quiz;
+  const [selectedAnswer,setSelectedAnswer] = useState("");
 
   const selectAnswer = (evt)=>{
     const id = evt.target.id;
     props.selectAnswer(id);
-  }
+    setSelectedAnswer(id);  }
   
 
   const handleSubmit = () => {
-    const answer =(props.selectedAnswer)
-    const id= (quiz.quiz_id);
+    const answer = (props.selectedAnswer)
+    const id = (quiz.quiz_id);
     props.postAnswer(id, answer);
   }
   
 
   useEffect(() => {
-    props.fetchQuiz();
+    props.quiz?null:props.fetchQuiz();
   }, []);
 
   return (
@@ -33,28 +36,28 @@ const Quiz = (props) => {
 
             <div id="quizAnswers">
         
-                <div className={props.selectedAnswer === quiz.answers[0].answer_id ? 'answer selected' : "answer"}>
+                <div className={selectedAnswer === quiz.answers[0].answer_id ? 'answer selected' : "answer"}>
                   {quiz.answers[0].text}
 
-                  <button id= {quiz.answers[0].answer_id} onClick={selectAnswer}>
-                    {props.selectAnswer === quiz.answers[0].answer_id ? 'SELECTED' : "Select"}
+                  <button id= {quiz.answers[0].answer_id} onClick = {selectAnswer}>
+                    {selectedAnswer=== quiz.answers[0].answer_id ? 'SELECTED' : "Select"}
                   </button>
                 </div>
 
-                <div className={props.selectAnswer === quiz.answers[1].answer_id ? 'answer selected': "answer"}>
+                <div className={selectedAnswer === quiz.answers[1].answer_id ? 'answer selected': "answer"}>
                     {quiz.answers[1].text}
-                <button id ={quiz.answers[1].answer_id} onClick= {selectAnswer}>
-                  {props.selectAnswer === quiz.answers[1].answer_id ? 'SELECTED': "Select"}
+                <button id ={quiz.answers[1].answer_id} onClick = {selectAnswer}>
+                  {selectedAnswer === quiz.answers[1].answer_id ? 'SELECTED': "Select"}
                 </button>
             
               </div>
             </div>
-            <button id="submitAnswerBtn" disabled ={!props.selectAnswer} onClick={handleSubmit}> Submit answer </button>
+            <button id="submitAnswerBtn" disabled ={!selectedAnswer} onClick={handleSubmit}> Submit answer </button>
           </>
     
-         ): "Loading next quiz..."
+         ) : "Loading next quiz..."
       }
     </div>
-  );
-};
+  )
+}
 export default connect(st => st, actionCreators)(Quiz);
