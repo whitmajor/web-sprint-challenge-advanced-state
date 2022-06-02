@@ -1,62 +1,58 @@
-import React ,{useEffect}from 'react'
-import { connect } from 'react-redux'
-import * as actionCreators from '../state/action-creators'
+import React from "react";
+import { connect } from "react-redux";
+import * as actionCreators from "../state/action-creators";
 
 export function Form(props) {
-  console.log(props)
+  const { inputChange, form, postQuiz } = props;
+  const onChange = (evt) => {
+    const { value, id } = evt.target;
+    const newQuestion = { ...form, [id]: value };
+    inputChange(newQuestion);
+  };
 
-  const onSubmit = evt => {
+  const onSubmit = (evt) => {
     evt.preventDefault();
-    console.log(props.form)
-    const question = props.form.newQuestion;
-    const trueAnswer =props.form.newTrueAnswer;
-    const falseAnswer = props.form.newFalseAnswer;
-    //props.postQuiz(props.form)
-    props.postQuiz({question_text: question, true_answer_text: trueAnswer, false_answer_text: falseAnswer})
+    postQuiz({
+      question_text: form.newQuestion,
+      true_answer_text: form.newTrueAnswer,
+      false_answer_text: form.newFalseAnswer,
+    });
+  };
 
-  }
-
-  const onChange = evt => {
-    const {id,value} = evt.target;
-    props.onChange(id,value)
-    
-  }
-  
-  const isDisabled = ()=>{
-    const button = document.getElementById("submitNewQuizBtn");
-    const trimQuestion = props.form.newQuestion.trim(' ');
-    const trimmedAnswer = props.form.newTrueAnswer.trim(' ');
-    const trimmedFalseAnswer = props.form.newFalseAnswer.trim(' ');
-
-    if (trimQuestion.length > 0 && trimmedAnswer.length > 0 && trimmedFalseAnswer.length >0){
-      return button.disabled = false;
-
-    }else{
-      return button.disabled = true
-    }
-  }
-  useEffect(()=>{
-    isDisabled();
-  },[props.form])
-
+  const enabled =
+    form.newQuestion.trim("").length > 1 &&
+    form.newTrueAnswer.trim("").length > 1 &&
+    form.newFalseAnswer.trim("").length > 1;
 
   return (
-    <form id="form"onSubmit={onSubmit} >
+    <form id="form" onSubmit={onSubmit}>
       <h2>Create New Quiz</h2>
-      <input maxLength={50} 
-       value = {props.form.newQuestion}
-      onChange={onChange} id="newQuestion" placeholder="Enter question" />
-      <input maxLength={50}
-       name={props.form.newTrueAnswer}
-       value={props.form.newTrueAnswer}
-       onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" />
-      <input maxLength={50}
-       name={props.form.newFalseAnswer}
-       value={props.form.newFalseAnswer}
-        onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" />
-      <button id="submitNewQuizBtn"  disabled={isDisabled} >Submit new quiz</button>
+      <input
+        maxLength={50}
+        onChange={onChange}
+        id="newQuestion"
+        value={form.newQuestion}
+        placeholder="Enter question"
+      />
+      <input
+        maxLength={50}
+        onChange={onChange}
+        id="newTrueAnswer"
+        value={form.newTrueAnswer}
+        placeholder="Enter true answer"
+      />
+      <input
+        maxLength={50}
+        onChange={onChange}
+        id="newFalseAnswer"
+        value={form.newFalseAnswer}
+        placeholder="Enter false answer"
+      />
+      <button disabled={!enabled} id="submitNewQuizBtn">
+        Submit new quiz
+      </button>
     </form>
-  )
+  );
 }
 
-export default connect(st => st, actionCreators)(Form)
+export default connect((state) => state, actionCreators)(Form);
